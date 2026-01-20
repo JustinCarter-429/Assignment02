@@ -3,15 +3,15 @@ package assign02;
 import java.util.GregorianCalendar;
 
 /**
- * This class represents a UHealth CurrentPatient who has a unique physician and
- * a lastVisit, also inheriting UHealthID, firstName, and lastName from the
+ * This class represents a UHealth CurrentPatient of the generic type who has a unique 
+ * physician and a lastVisit, also inheriting UHealthID, firstName, and lastName from the
  * parent class of Patient.
  *
  * @author CS 2420 course staff and Justin Carter and Anthony Voegeli
  * @version 01/18/2026
  */
-public class CurrentPatient extends Patient {
-	private int physician;
+public class CurrentPatientGeneric<Type> extends Patient {
+	private Type physician; // Changed the int data type to the generic Type as instructed
 	private GregorianCalendar lastVisit;
 
 	/**
@@ -23,8 +23,9 @@ public class CurrentPatient extends Patient {
 	 * @param physician - of the patient
 	 * @param lastVisity - of the patient
 	 */
-	public CurrentPatient(String firstName, String lastName, UHealthID uHealthID, int physician,
+	public CurrentPatientGeneric(String firstName, String lastName, UHealthID uHealthID, Type physician,
 			GregorianCalendar lastVisit) {
+		// Changed the date type of physician in the parameter to the Generic Type
 		super(firstName, lastName, uHealthID);
 		this.physician = physician;
 		this.lastVisit = lastVisit;
@@ -34,12 +35,12 @@ public class CurrentPatient extends Patient {
 	 * Method to retrieve the physician information of the patient.
 	 * @return physician - of the patient.
 	 */
-	public int getPhysician() {
-		if (this.physician < 0)
-			throw new IllegalArgumentException();
+	public Type getPhysician() {
+		 //if (this.physician < 0) // Unsure how to check to for this Generic type to
+		// meet boolean expression.
+		// throw new IllegalArgumentException();
 		return this.physician;
 	}
-
 	/**
 	 * Method to retrieve the lastVisity information of the patient.
 	 * @return lastVisit - of the patient.
@@ -53,9 +54,10 @@ public class CurrentPatient extends Patient {
 	 * Method to change the current physician of a the CurrentPatient to a newPhysician.
 	 * @param newPhysician - of the patient. 
 	 */
-	public void updatePhysician(int newPhysician) {
-		if (newPhysician < 0)
-			throw new IllegalArgumentException();
+	public void updatePhysician(Type newPhysician) {
+		// if (newPhysician < 0)Unsure how to check to for this Generic type to meet
+		// boolean expression.
+		// throw new IllegalArgumentException();
 		this.physician = newPhysician;
 	}
 

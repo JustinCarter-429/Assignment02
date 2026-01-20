@@ -31,6 +31,9 @@ public class FacilityTester {
 		uHID1 = new UHealthID("AAAA-1111");
 		uHID2 = new UHealthID("BCBC-2323");
 		uHID3 = new UHealthID("HRHR-7654");
+		uHID4 = new UHealthID("AAYU-4545");
+		uHID5 = new UHealthID("ABBC-5656");
+		uHID6 = new UHealthID("CDET-8898");
 
 		date1 = new GregorianCalendar(2023, 0, 1);
 		date2 = new GregorianCalendar(2023, 3, 17);
@@ -44,9 +47,9 @@ public class FacilityTester {
 		verySmallFacility = new Facility();
 		verySmallFacility.addPatient(new CurrentPatient("Jane", "Doe", uHID1, 1010101, date1));
 		verySmallFacility.addPatient(new CurrentPatient("Drew", "Hall", uHID2, 3232323, date2));
-		verySmallFacility.addPatient(new CurrentPatient("Riley", "Nguyen", uHID3, 9879876, date3));
+		verySmallFacility.addPatient(new CurrentPatient("Riley", "Nguyen", uHID3, 9879876, date1));
 		verySmallFacility.addPatient(new CurrentPatient("john", "manzel", uHID4, 3232323, date5));
-		verySmallFacility.addPatient(new CurrentPatient("Justin", "Carter", uHID5, 9879876, date4));
+		verySmallFacility.addPatient(new CurrentPatient("Justin", "Carter", uHID5, 9879876, date1));
 		verySmallFacility.addPatient(new CurrentPatient("Drew", "Hall", uHID2, 3232323, date2));
 
 		smallFacility = new Facility();
@@ -60,6 +63,30 @@ public class FacilityTester {
 
 	// Empty Facility tests --------------------------------------------------------
 
+	@Test // This method test and make sure I am able to set the most recent Visit
+	public void SetLastVisitTest() {
+		emptyFacility.addPatient(new CurrentPatient("Tommie", "brady", uHID1, 1, null));
+		emptyFacility.setLastVisit(uHID1, date3);
+		CurrentPatient newPatient = emptyFacility.lookupByUHID(uHID1);
+		assertEquals(date3, newPatient.getLastVisit());
+	}
+	
+	@Test // I made this test to ensure the setPhysician() method will work so I 
+	// made a Current Patient object inside small facility and made the PHy number null then used the test method.
+	public void setPhysicianTest() {
+		smallFacility.addPatient(new CurrentPatient("Lebron Le Goat", "James", uHID1, 1, null)); //make the physician null to start
+		smallFacility.setPhysician(uHID1, 3232323);
+		int NewPhysician = smallFacility.lookupByUHID(uHID1).getPhysician();
+		assertEquals(3232323, NewPhysician );
+	}
+	@Test //In this test I make a copy of the SmallFacility.getPhysiciamList of integers and put them in  
+	// another arraylist to test the method.
+	public void GetPhysicianListTest() {
+		ArrayList<Integer> expectedList = new ArrayList<>(smallFacility.getPhysicianList());
+	    assertEquals(expectedList, smallFacility.getPhysicianList());
+		
+	}
+	
 	@Test
 	public void testEmptyLookupUHID() {
 		assertNull(emptyFacility.lookupByUHID(uHID1));
@@ -87,6 +114,36 @@ public class FacilityTester {
 	public void testEmptyGetRecentPatients() {
 		ArrayList<CurrentPatient> patients = emptyFacility.getRecentPatients(date3);
 		assertEquals(0, patients.size());
+	}
+	
+	@Test // This method test to make sure all of the patients are displayed after the cut off date
+	public void  getRecentPatientsTest() {
+		Facility temp = new Facility();
+		date1 = new GregorianCalendar(2020, 0, 1);
+		date2 = new GregorianCalendar(2023, 3, 17);
+		date3 = new GregorianCalendar(2022, 8, 21);
+		date4 = new GregorianCalendar(2021, 5, 21);
+		date5 = new GregorianCalendar(2023, 5, 14);
+		date6 = new GregorianCalendar(2024, 5, 24);
+		CurrentPatient a = new CurrentPatient("Jane", "Doe", uHID1, 1010101, date1);
+		CurrentPatient b = new CurrentPatient("Drew", "Hall", uHID2, 3232323, date4);
+		CurrentPatient c = new CurrentPatient("Riley", "Nguyen", uHID3, 9879876, date3);
+		CurrentPatient d = new CurrentPatient("john", "manzel", uHID4, 3232323, date6);
+		CurrentPatient e = new CurrentPatient("Justin", "Carter", uHID5, 9879876, date5);
+		CurrentPatient f = new CurrentPatient("Drew", "Hall", uHID6,3232323, date2);
+	    temp.addPatient(a);
+	    temp.addPatient(b);
+	    temp.addPatient(c);
+	    temp.addPatient(d);
+	    temp.addPatient(e);
+	    temp.addPatient(f);
+	    ArrayList<CurrentPatient> recent = temp.getRecentPatients(date1);
+	    assertEquals(5,recent.size());
+	    assertEquals(b, recent.get(0));
+	    assertEquals(c, recent.get(1));
+	    assertEquals(d, recent.get(2));
+	    assertEquals(e, recent.get(3));
+	    assertEquals(f, recent.get(4));
 	}
 
 	// Very small facility tests ---------------------------------------------------
