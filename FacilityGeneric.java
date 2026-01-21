@@ -9,8 +9,8 @@ import java.util.GregorianCalendar;
  * This class represents a record of patients that have visited a UHealth
  * facility. It maintains a collection of CurrentPatients.
  *
- * @author CS 2420 course staff and ***STUDENT FILL YOUR NAME IN***
- * @version ***STUDENT FILL IN THE DATE***
+ * @author CS 2420 course staff and Justin Carter and Anthony Voegeli
+ * @version 01/19/26
  */
 public class FacilityGeneric<Type> {
 
@@ -44,10 +44,6 @@ public class FacilityGeneric<Type> {
 		patientList.add(patient); // ---> if the patient was not on the list and was added it will return true.
 		return true;
 	}
-
-	// public void add(ArrayList<CurrentPatient> patients) {
-	// patientList.add(0, null);
-	// }
 
 	/**
 	 * Adds all patients from the given list to the list of patients.
@@ -92,18 +88,12 @@ public class FacilityGeneric<Type> {
 	 *         empty list if no such patients exist in the record
 	 */
 	public ArrayList<CurrentPatientGeneric<Type>> lookupByPhysician(Type physician) {
-		// TODO: Fill in the method according to the contract.
 		ArrayList<CurrentPatientGeneric<Type>> foundPatients = new ArrayList<>();
 		for (int i = 0; i < patientList.size(); i++) {
-			if (patientList.get(i).getPhysician() == physician) // if the current index at getPhysician matches the
-																// physician info that was inputted we add it to the
-																// list.
-				foundPatients.add(patientList.get(i));
-//		if (patientList.get(i).getPhysician() != physician) {
-//			continue;}	
+			if (patientList.get(i).getPhysician().equals(physician)) // if the current index at getPhysician matches the
+				foundPatients.add(patientList.get(i));               // physician info that was inputted we add it to the list.
 		}
 		return foundPatients; // we then return the list after
-
 	}
 
 	/**
@@ -117,10 +107,8 @@ public class FacilityGeneric<Type> {
 	 *         order), or an empty list if no such patients exist in the record
 	 */
 	public ArrayList<CurrentPatientGeneric<Type>> getRecentPatients(GregorianCalendar date) {
-		// TODO: Fill in the method according to the contract.
 		ArrayList<CurrentPatientGeneric<Type>> foundPatients = new ArrayList<>();
 		for (int i = 0; i < patientList.size(); i++) {
-			// int targetDate = date.compareTo(patientList.get(i).getLastVisit());
 			int targetDate = patientList.get(i).getLastVisit().compareTo(date);
 			if (targetDate == 1) {
 				foundPatients.add(0, patientList.get(i));
@@ -139,16 +127,16 @@ public class FacilityGeneric<Type> {
 	 *         if no patients exist in the record
 	 */
 	public ArrayList<Type> getPhysicianList() {
-		// TODO: Fill in the method according to the contract.
-		ArrayList<Integer> physicianList = new ArrayList<>();
+		ArrayList<Type> physicianList = new ArrayList<>();
 		for (int i = 0; i < patientList.size(); i++) {
-			if (physicianList.contains(patientList.get(i).getPhysician())) {
-				continue;
-			} else {
-				physicianList.addAll(i, physicianList);
+			// created a placeholder for the physician at given index to then be used to see
+			// if it is contained within the physicianList, adds to list if not present.
+			Type currentPhysician = patientList.get(i).getPhysician();
+			if (!physicianList.contains(currentPhysician)) {
+				physicianList.add(currentPhysician);
 			}
 		}
-		return (ArrayList<Type>) physicianList;
+		return physicianList;
 	}
 
 	/**
@@ -161,7 +149,6 @@ public class FacilityGeneric<Type> {
 	 * @param physician - identifier of patient's new physician
 	 */
 	public void setPhysician(UHealthID patientID, Type physician) {
-		// TODO: Fill in the method according to the contract.
 		if (patientID == null) {
 			throw new IllegalArgumentException("No patient in records.");
 		}
@@ -182,17 +169,15 @@ public class FacilityGeneric<Type> {
 	 * @param date      - date of last visit
 	 */
 	public void setLastVisit(UHealthID patientID, GregorianCalendar date) {
-		// TODO: Fill in the method according to the contract.
 		if (patientID == null) {
 			throw new IllegalArgumentException("No patient in records.");
 		}
 		for (int i = 0; i < patientList.size(); i++) {
 			if (patientList.get(i).getUHealthID().equals(patientID)) {
 				patientList.get(i).updateLastVisit(date);
-			}
-		}
-	}
-	
+			} 
+		}}
+
 	/**
 	 * Returns the list of current patients in this facility, sorted according to
 	 * the provided Comparator.
@@ -201,36 +186,35 @@ public class FacilityGeneric<Type> {
 	 * @return an ordered list of all patients in this facility
 	 */
 	public ArrayList<CurrentPatientGeneric<Type>> getOrderedPatients(Comparator<CurrentPatientGeneric<Type>> cmp) {
-	    ArrayList<CurrentPatientGeneric<Type>> patientListCopy = new ArrayList<CurrentPatientGeneric<Type>>();
-	    for(CurrentPatientGeneric<Type> patient : patientList) {
-	        patientListCopy.add(patient);
-	    }
-	    sort(patientListCopy, cmp);
-	    return patientListCopy;
+		ArrayList<CurrentPatientGeneric<Type>> patientListCopy = new ArrayList<CurrentPatientGeneric<Type>>();
+		for (CurrentPatientGeneric<Type> patient : patientList) {
+			patientListCopy.add(patient);
+		}
+		sort(patientListCopy, cmp);
+		return patientListCopy;
 	}
 
 	/**
 	 * Performs a SELECTION SORT on the input ArrayList.
 	 * 
-	 * 1. Finds the smallest item in the list. 
-	 * 2. Swaps the smallest item with the first item in the list. 
-	 * 3. Reconsiders the list to be the remaining unsorted portion (second item to Nth item) and 
-	 *    repeats steps 1, 2, and 3.
+	 * 1. Finds the smallest item in the list. 2. Swaps the smallest item with the
+	 * first item in the list. 3. Reconsiders the list to be the remaining unsorted
+	 * portion (second item to Nth item) and repeats steps 1, 2, and 3.
 	 * 
 	 * @param list - to sort
 	 * @param cmp  - Comparator to use
 	 */
 	private static <ListType> void sort(ArrayList<ListType> list, Comparator<ListType> cmp) {
-	    for(int i = 0; i < list.size() - 1; i++) {
-	        int j, minIndex;
-	        for(j = i + 1, minIndex = i; j < list.size(); j++) {
-	            if(cmp.compare(list.get(j), list.get(minIndex)) < 0) {
-	                minIndex = j;
-	            }
-	        }
-	        ListType temp = list.get(i);
-	        list.set(i, list.get(minIndex));
-	        list.set(minIndex, temp);
-	    }
+		for (int i = 0; i < list.size() - 1; i++) {
+			int j, minIndex;
+			for (j = i + 1, minIndex = i; j < list.size(); j++) {
+				if (cmp.compare(list.get(j), list.get(minIndex)) < 0) {
+					minIndex = j;
+				}
+			}
+			ListType temp = list.get(i);
+			list.set(i, list.get(minIndex));
+			list.set(minIndex, temp);
+		}
 	}
 }
